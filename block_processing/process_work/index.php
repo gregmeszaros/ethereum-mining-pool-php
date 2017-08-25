@@ -5,7 +5,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
 // $m->addServer('localhost', 11211);
 
 // @TODO maybe have a config option if to use REDIS vs Memcache?
-$redis = include_once('../RedisInit.php');
+$redis = include_once('../../RedisInit.php');
 
 $getBlockInfoKey = 'blockinfo';
 $getWorkCacheKey = 'eth_getWork_response';
@@ -41,11 +41,11 @@ while(1) {
 	echo "\nGetting Block Data From RPC...";
 	$result1 = curl_exec($ch1);
 	if ($result1) {
-    echo "\nOk!";
+    echo "\n blockinfo - ok!";
   }
 	$result = curl_exec($ch);
-	if ($result1) {
-    echo "\nOk!";
+	if ($result) {
+    echo "\n getWork_response - ok!";
   }
 
   $redis->set($getWorkCacheKey, $result);

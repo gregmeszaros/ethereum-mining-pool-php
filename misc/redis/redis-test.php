@@ -1,6 +1,6 @@
 <?php
   // Connecting to Redis server on localhost
-  $redis = include_once('../RedisInit.php');
+  $redis = include_once('../../RedisInit.php');
 
   echo "Connection to server succeeded";
 

@@ -1,12 +1,15 @@
 <?php
-	error_reporting(error_reporting() & ~E_NOTICE);
-	include('/var/www4/BigInteger.php');
-	$config = include('../config.php');
+  error_reporting(error_reporting() & ~E_NOTICE);
+  include_once('../BigInteger.php');
+  $config = include_once('../config.php');
+  $redis = include_once('../RedisInit.php');
 
-	$mysqli=mysqli_connect($config['host'], $config['username'], $config['password'], $config['bdd']) or die("Database Error");
-	$df = 0;
-	$m = new Memcached();
-	$m->addServer('localhost', 11211);
+  $mysqli = mysqli_connect($config['host'], $config['username'], $config['password'], $config['bdd']) or die("Database Error");
+  $df = 0;
+
+  // @ replace to redis call
+  $m = new Memcached();
+  $m->addServer('localhost', 11211);
 
 while(1) {
 	$state_work = $m->get('state_work');

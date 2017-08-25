@@ -5,9 +5,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
 // $m->addServer('localhost', 11211);
 
 // @TODO maybe have a config option if to use REDIS vs Memcache?
-// @TODO all the hosts, ports etc can come from config file?
-$redis = new Redis();
-$redis->connect('127.0.0.1', 6379);
+$redis = include_once('../RedisInit.php');
 
 $getBlockInfoKey = 'blockinfo';
 $getWorkCacheKey = 'eth_getWork_response';

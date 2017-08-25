@@ -1,9 +1,8 @@
 <?php
-
-return array(
+  return array(
     'host' => 'localhost',
     'username' => '',
-	'password' => '',
-	'bdd' => ''
-);
+    'password' => '',
+    'bdd' => ''
+  );
 ?>

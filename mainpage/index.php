@@ -472,10 +472,10 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
     $shareCheckerKey => $shareCheckerKey);
     $keys = array_keys($data_multi);
 
-    $got = $redis->mGet($keys, $null);
+    $got = $redis->mGet($keys);
     while (!$got) {
         usleep(100000);
-        $got = $redis->mGet($keys, $null);
+        $got = $redis->mGet($keys);
     }
     
     $result1 = $got["blockinfo"];

@@ -238,7 +238,7 @@ $method = $json['method'];
 
 
 //On/off Logging
-$logstate = false;
+$logstate = true;
 //If there is no log for particular user on ymdh time, then create
 if($logstate){
 	$filename = $payout_addr.'='.date('Y M D H');

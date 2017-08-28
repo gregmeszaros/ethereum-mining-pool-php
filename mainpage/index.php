@@ -1,9 +1,11 @@
 <?php
 error_reporting(error_reporting() & ~E_NOTICE);
-include('/var/www4/BigInteger.php');
+include_once('../BigInteger.php');
 $jsonquery = file_get_contents('php://input');
 $json = json_decode($jsonquery, true);
 $config = include('../config.php');
+$redis = include_once('../RedisInit.php');
+
 $minerdata = $_GET["miner"];
 $host = $_SERVER["REMOTE_ADDR"];
 
@@ -14,8 +16,8 @@ $miner_diff = 15000000;
 //$miner_diff = 25000000;
 
 
-$m = new Memcached();
-$m->addServer('localhost', 11211);
+//$m = new Memcached();
+//$m->addServer('localhost', 11211);
 
 //If not miner > website
 if (strpos($minerdata,'@') === false) {
@@ -277,7 +279,7 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
     $cur_time = time();
     $hashdata = array($payout_addr, $hash_rate, $hashrateReported, $cur_time);                                                                    
 
-    $currentMemArr = $m->get('R_Hash:'.$payout_addr);
+    $currentMemArr = $redis->get('R_Hash:' . $payout_addr);
     $countFetchedArray = count($currentMemArr);
 
     $miner_total = array();
@@ -315,15 +317,15 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
              }
              $new = array();
              array_push($new, $hashdata);
-             $m->set('R_Hash:'.$payout_addr,$new,360);
+             $redis->set('R_Hash:' . $payout_addr, $new, 360);
          } else {
             array_push($currentMemArr, $hashdata);
-            $m->set('R_Hash:'.$payout_addr,$currentMemArr,360);
+            $redis->set('R_Hash:' . $payout_addr, $currentMemArr, 360);
          }
     } else {
         $new = array();
         array_push($new, $hashdata);
-        $m->set('R_Hash:'.$payout_addr,$new,360);
+        $redis->set('R_Hash:' . $payout_addr, $new,360);
     }
  //DO NOT USE GETH TO HANDLE HASHRATE
 	$ch = curl_init('http://127.0.0.1:8983');                                                                      
@@ -381,16 +383,16 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
 
 	//ADJUST DIFF
 		$shareCheckerKey = 'submiting_'.$payout_addr.'_'.$hash_rate;
-		$CheckShareData = $m->get($shareCheckerKey);
+		$CheckShareData = $redis->get($shareCheckerKey);
 		$CheckShareData = $CheckShareData + 1;
-		$m->set($shareCheckerKey,$CheckShareData,30);
+		$redis->set($shareCheckerKey, $CheckShareData, 30);
 	//////////////////////////////////
 	//Override response from geth due it's changes, always pass work for futher processing
 	if (1 == 1) {
 		$jsonparm = $json['params'];
 		$appKey = md5($hash_rate.$payout_addr);
 		$current .= "\nAPPKEY:".$appKey;
-		$dataForApp = $m->get($appKey);
+		$dataForApp = $redis->get($appKey);
 		if ($dataForApp[4] == $jsonparm[1]) {
 			$current .= "\n==========================================================================";
 			$current .= "\n=======================WORK HAS BEEN SUMBITED=============================";
@@ -411,7 +413,7 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
 
 
 			$shareKey = 'share_ok';
-			$shareData = $m->get($shareKey);
+			$shareData = $redis->get($shareKey);
 			if ($shareData > $shareCounter) {
 				//$m->set($shareKey,0,360);
 				//$m->set('share_fail',0,360);
@@ -419,10 +421,10 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
                     'share_ok' => 0,
                     'share_fail' => 0
                 );
-                $m->setMulti($items, time() + 360); 
+                $reds->mSet($items, time() + 360);
 			} else {
 				$shareData = $shareData + 1;
-				$m->set($shareKey,$shareData,360);
+				$redis->set($shareKey,$shareData,360);
 			}
 
 			$existQuery = "SELECT address FROM shares WHERE nonceFound='$jsonparm[0]'";
@@ -445,7 +447,7 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
 		$current .= "\n===========WORK HAS NOT BEEN SUMBITED DUE EXPIRED SOLUTION=============";
 	
 	$shareKey = 'share_fail';
-	$shareData = $m->get($shareKey);
+	$shareData = $redis->get($shareKey);
 	if ($shareData > $shareCounter) {
 		//$m->set($shareKey,0,360);
 		//$m->set('share_ok',0,360);
@@ -453,10 +455,10 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
            'share_ok' => 0,
            'share_fail' => 0
         );
-        $m->setMulti($items, time() + 360); 
+        $redis->mSet($items, time() + 360);
 	} else {
 		$shareData = $shareData + 1;
-		$m->set($shareKey,$shareData,360);
+		$redis->set($shareKey,$shareData,360);
 	}
 
 
@@ -470,10 +472,10 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
     $shareCheckerKey => $shareCheckerKey);
     $keys = array_keys($data_multi);
 
-    $got = $m->getMulti($keys, $null);
+    $got = $redis->mGet($keys, $null);
     while (!$got) {
         usleep(100000);
-        $got = $m->getMulti($keys, $null);
+        $got = $redis->mGet($keys, $null);
     }
     
     $result1 = $got["blockinfo"];
@@ -553,7 +555,7 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
              $payout_addr => $dataWrite,
              $miner_reference => $rig_name
         );
-        $m->setMulti($items, time() + 120); 
+        $redis->mSet($items, time() + 120);
 
 		//Overwrite rpc method
 		$data_redit = array("id" => 1, "jsonrpc" => "2.0", "result" => [$targetBlockResult[0], $targetBlockResult[1], $target_diff]);                                                                    

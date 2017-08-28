@@ -160,8 +160,8 @@ while(1) {
     $current .= "\nLenght:".$Lenght;
     if ($Lenght > 20 && strpos($Lenght_123,'-') === false) {
       $block_coins_size = $standart_block_size;
-      echo "\nBlocksize normal _FIXXX _LENGHT ".$block_coins_size->toString();
-      $current .= "\nBlocksize normal _FIXXX _LENGHT ".$block_coins_size->toString();
+      echo "\nBlocksize normal _FIXXX _LENGHT " . $block_coins_size->toString();
+      $current .= "\nBlocksize normal _FIXXX _LENGHT " . $block_coins_size->toString();
     }
     $nullNumber = new Math_BigInteger('0');
     if ($block_coins_size < $nullNumber) {
@@ -171,11 +171,11 @@ while(1) {
 
     $pool_fee_revenue = '0x0';  //Pool fee revenue
     $poolFee = 100-1;  // fee -> 1%
-    $current .= "\nBlock size:".$block_coins_size->toString().'';
-    $current .= "\nPool fee:".$poolFee.'';
+    $current .= "\nBlock size:" . $block_coins_size->toString() . '';
+    $current .= "\nPool fee:" . $poolFee . '';
 
-    echo "\nBlock size:".$block_coins_size->toString().'';
-    echo "\nPool fee:".$poolFee.'% for miner';
+    echo "\nBlock size:" . $block_coins_size->toString() . '';
+    echo "\nPool fee:" . $poolFee . '% for miner';
 
     $data = array("jsonrpc" => "2.0", "method" => "eth_getBlockByNumber", "params" => ["latest", true], "id" => "1");
     $data_string = json_encode($data);

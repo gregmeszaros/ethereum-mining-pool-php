@@ -35,35 +35,35 @@ $iteration;
 
 while(1) {
   $iteration++;
-	echo "\n-------------------------------------------------------------------";
-	echo "\n".$iteration;
-	echo "\n-------------------------------------------------------------------";
-	echo "\nGetting Block Data From RPC...";
-	$result1 = curl_exec($ch1);
-	if ($result1) {
+  echo "\n-------------------------------------------------------------------";
+  echo "\n".$iteration;
+  echo "\n-------------------------------------------------------------------";
+  echo "\nGetting Block Data From RPC...";
+  $result1 = curl_exec($ch1);
+  if ($result1) {
     echo "\n blockinfo - ok!";
   }
-	$result = curl_exec($ch);
-	if ($result) {
+  $result = curl_exec($ch);
+  if ($result) {
     echo "\n getWork_response - ok!";
   }
 
-  $redis->set($getWorkCacheKey, $result);
-  $redis->set($getBlockInfoKey, $result1);
+  $redis->set($getWorkCacheKey, json_encode($result));
+  $redis->set($getBlockInfoKey, json_encode($result1));
 
   echo "\nCached in Memory!";
 
   /**
   $m->set($getWorkCacheKey,$result);
 
-	$items = array(
-    $getBlockInfoKey => $result1,
-    $getWorkCacheKey => $result
+  $items = array(
+  $getBlockInfoKey => $result1,
+  $getWorkCacheKey => $result
   );
   $m->setMulti($items);
    */
 
-	usleep(25000);
+  usleep(25000);
 }
 
 ?>

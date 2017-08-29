@@ -337,7 +337,7 @@ else if($method == 'eth_submitHashrate') {
   );
   $result = curl_exec($ch);
   // might need to comment out
-  $current .= "\n\nResponse hashrate:" . $result;
+  // $current .= "\n\nResponse hashrate:" . $result;
   //echo $result;
   //*/
   $data_redit = array("id" => 73, "jsonrpc" => "2.0", "result" => true);
@@ -390,7 +390,7 @@ else if($method == 'eth_submitHashrate') {
   if (1 == 1) {
     $jsonparm = $json['params'];
     $appKey = md5($hash_rate . $payout_addr);
-    $current .= "\nAPPKEY:".$appKey;
+    $current .= "\nAPPKEY:" . $appKey;
     $dataForApp = $redis->get($appKey);
     if ($dataForApp[4] == $jsonparm[1]) {
       $current .= "\n==========================================================================";
@@ -433,14 +433,14 @@ else if($method == 'eth_submitHashrate') {
       if (!$addrchecker) {
         $timeNow = time();
         $tas22k = 'INSERT INTO shares (blockid, address, minertarget, minerdiff, blockdiff, blockPowHash, realBlockTarget, nonceFound, FoundPowHash, Digest, seedhash, time) VALUES ("'.$dataForApp[6].'", "'.$dataForApp[0].'", "'.$dataForApp[1].'", "'.$dataForApp[2].'", "'.$dataForApp[3].'", "'.$dataForApp[4].'", "'.$dataForApp[5].'", "'.$jsonparm[0].'", "'.$jsonparm[1].'", "'.$jsonparm[2].'", "'.$dataForApp[7].'", "'.$timeNow.'")';
-        $query = mysqli_query($mysqli,$tas22k) or die("Database Error");
+        $query = mysqli_query($mysqli, $tas22k) or die("Database Error");
       } else {
         die('Dead');
       }
     } else {
       $current .= "\n===========WORK HAS NOT BEEN SUMBITED DUE POW HASH DIFFERENCE=============";
-      $current .= "\nSubmitPow:".$jsonparm[1];
-      $current .= "\nGetWorPow:".$dataForApp[4];
+      $current .= "\nSubmitPow:" . $jsonparm[1];
+      $current .= "\nGetWorPow:" . $dataForApp[4];
     }
   } else {
     $current .= "\n===========WORK HAS NOT BEEN SUMBITED DUE EXPIRED SOLUTION=============";
@@ -519,7 +519,7 @@ else if($method == 'eth_getWork') {
     }
     $fixed_diff = $fixed_diff * $miner_diff;
     $fixed_diff = new Math_BigInteger($fixed_diff);
-    $current .= "\nFixed diff value:".$fixed_diff;
+    $current .= "\nFixed diff value:" . $fixed_diff;
   }
   else {
     die('You need to specify your hashrate!');
@@ -543,7 +543,7 @@ else if($method == 'eth_getWork') {
     $target_diff = '0x' . $fix . $target_diff;
   }
 
-  //Save Getwork for user to validate later with submit work
+  // Save Getwork for user to validate later with submit work
   $appKey = md5($hash_rate . $payout_addr);
   $current .= "\nAPPKEY:" . $appKey;
   $block_number = hexdec($block_number) + 1;
@@ -594,9 +594,9 @@ function bcdechex($dec) {
   $hex = '';
   do {
     $last = bcmod($dec, 16);
-    $hex = dechex($last).$hex;
+    $hex = dechex($last) . $hex;
     $dec = bcdiv(bcsub($dec, $last), 16);
-  } while($dec>0);
+  } while($dec > 0);
   return $hex;
 }
 

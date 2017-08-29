@@ -252,7 +252,7 @@ while(1) {
           }
           file_put_contents($filtempe, $data_string);
           $output=0;
-          $output = shell_exec('/usr/bin/python /root/pyethereum/ethereum/nonce_fast.py ' . $filtempe.' ' . rand(5,123142312));
+          $output = shell_exec('/usr/bin/python /root/pyethereum/ethereum/nonce_fast.py ' . $filtempe .' ' . rand(5,123142312));
           $test = explode(' ', $output);
 
           $countAll=0;

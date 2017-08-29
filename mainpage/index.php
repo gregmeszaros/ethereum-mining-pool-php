@@ -358,7 +358,6 @@ else if($method == 'eth_submitHashrate') {
   $current .= "\n\nResponse:" . $result;
   $submitWork = json_decode($result, true);
   $submitWorkResult = $submitWork['result'];
-  echo $result;
   echo '{"jsonrpc":"2.0","id":1,"result":true}'; //Override response from geth to consider share submitted.
 
   //Submit New User or update randomly ip and hashrate
@@ -559,7 +558,7 @@ else if($method == 'eth_getWork') {
     $payout_addr => $dataWrite,
     $miner_reference => $rig_name
   );
-  $redis->mSet($items, time() + 120);
+  $redis->mSet($items);
 
   //Overwrite rpc method
   $data_redit = array("id" => 1, "jsonrpc" => "2.0", "result" => [$targetBlockResult[0], $targetBlockResult[1], $target_diff]);

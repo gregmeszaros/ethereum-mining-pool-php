@@ -255,8 +255,8 @@ $current .= "\n\n\n\n---------------------------New Query\nMethod:".$method.' Fr
 
 
 //Get Last Block information  Memcached - > Run /process_work in screen
-$current .= "\nUser Hashrate S:".$hash_rate.'mhash';
-$current .= "\nUser payout S:".$payout_addr.'';
+$current .= "\nUser Hashrate S:" . $hash_rate . 'mhash';
+$current .= "\nUser payout S:" . $payout_addr . '';
 
 
 if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
@@ -270,7 +270,7 @@ if ($method == 'eth_awaitNewWork' || $method == 'eth_progress') {
       'Content-Length: ' . strlen($jsonquery))
   );
   $result = curl_exec($ch);
-  $current .= "\n\nResponse:".$result;
+  $current .= "\n\nResponse:" . $result;
   echo $result;
 }
 else if($method == 'eth_submitHashrate') {
@@ -305,10 +305,10 @@ else if($method == 'eth_submitHashrate') {
         }
       }
       $mysqli=mysqli_connect($config['host'], $config['username'], $config['password'], $config['bdd']) or die("Database Error");
-      $lastItem = $countFetchedArray-1;
+      $lastItem = $countFetchedArray - 1;
       $last_timestamp = $currentMemArr[$lastItem][3];
       foreach ($miner_total as $key => $value) {
-        $current .= "\n\nSHOULD WORK onse:".$value;
+        $current .= "\n\nSHOULD WORK once:" . $value;
         $key = str_replace('"', '', $key);
         $key = str_replace("'", '', $key);
         $add2Stats = "INSERT INTO stats (user, userid, hashrate, val_timestamp) VALUES ('$payout_addr', '$key', '$value', '$last_timestamp')";
@@ -335,8 +335,8 @@ else if($method == 'eth_submitHashrate') {
       'Content-Type: application/json',
       'Content-Length: ' . strlen($jsonquery))
   );
-  //$result = curl_exec($ch);
-  $current .= "\n\nResponse:" . $result;
+  $result = curl_exec($ch);
+  $current .= "\n\nResponse hashrate:" . $result;
   //echo $result;
   //*/
   $data_redit = array("id" => 73, "jsonrpc" => "2.0", "result" => true);
@@ -381,7 +381,7 @@ else if($method == 'eth_submitHashrate') {
   }
 
   //ADJUST DIFF
-  $shareCheckerKey = 'submiting_'.$payout_addr.'_'.$hash_rate;
+  $shareCheckerKey = 'submiting_' . $payout_addr . '_' . $hash_rate;
   $CheckShareData = $redis->get($shareCheckerKey);
   $CheckShareData = $CheckShareData + 1;
   $redis->set($shareCheckerKey, $CheckShareData, 30);
@@ -509,7 +509,7 @@ else if($method == 'eth_getWork') {
   $last_block_diff = new Math_BigInteger(hexdec($last_block_diff));
 
   if($hash_rate) {
-    $shareCheckerKey = 'submiting_'.$payout_addr.'_'.$hash_rate;
+    $shareCheckerKey = 'submiting_' . $payout_addr . '_' . $hash_rate;
     //DONE HIGHER -
     //$CheckShareData = $m->get($shareCheckerKey);
     if (!$CheckShareData) {

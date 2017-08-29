@@ -48,8 +48,8 @@ while(1) {
     echo "\n getWork_response - ok!";
   }
 
-  $redis->set($getWorkCacheKey, json_encode($result));
-  $redis->set($getBlockInfoKey, json_encode($result1));
+  $redis->set($getWorkCacheKey, $result);
+  $redis->set($getBlockInfoKey, $result1);
 
   echo "\nCached in Memory!";
 

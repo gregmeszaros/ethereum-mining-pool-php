@@ -355,16 +355,16 @@ else if($method == 'eth_submitHashrate') {
       'Content-Length: ' . strlen($jsonquery))
   );
   $result = curl_exec($ch);
-  $current .= "\n\nResponse:".$result;
+  $current .= "\n\nResponse:" . $result;
   $submitWork = json_decode($result, true);
   $submitWorkResult = $submitWork['result'];
-  //echo $result;
+  echo $result;
   echo '{"jsonrpc":"2.0","id":1,"result":true}'; //Override response from geth to consider share submitted.
 
   //Submit New User or update randomly ip and hashrate
-  if($payout_addr != ''){
+  if($payout_addr != '') {
     $mysqli=mysqli_connect($config['host'], $config['username'], $config['password'], $config['bdd']) or die("Database Error");
-    $existQuery = "SELECT address,hashrate FROM miners WHERE address='$payout_addr'";
+    $existQuery = "SELECT address, hashrate FROM miners WHERE address='$payout_addr'";
     $existResult = mysqli_query($mysqli,$existQuery)or die("Database Error");
     $existRow = mysqli_fetch_array($existResult);
     $mineraddr = $existRow[0];
@@ -390,7 +390,7 @@ else if($method == 'eth_submitHashrate') {
   //Override response from geth due it's changes, always pass work for futher processing
   if (1 == 1) {
     $jsonparm = $json['params'];
-    $appKey = md5($hash_rate.$payout_addr);
+    $appKey = md5($hash_rate . $payout_addr);
     $current .= "\nAPPKEY:".$appKey;
     $dataForApp = $redis->get($appKey);
     if ($dataForApp[4] == $jsonparm[1]) {

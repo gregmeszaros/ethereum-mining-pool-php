@@ -231,8 +231,8 @@ while(1) {
           echo "\n".$block_coins_size->toString().' wei to split';
           $current .= "\nBlock: ".$blockdecimalrow." has been mined!\n";
           $current .= "\n".$block_coins_size->toString().' wei to split';
-          $current .= "\nBlock MINEDBY: ".$minedBy."";
-          echo "\nBlock MINYED BY: ".$minedBy."";
+          $current .= "\nBlock MINEDBY: " . $minedBy . "";
+          echo "\nBlock MINED BY: " . $minedBy . "";
 
           $dataitems = array();
           $existQuery = "SELECT blockid, blockPowHash, Digest, nonceFound, minerdiff FROM shares";

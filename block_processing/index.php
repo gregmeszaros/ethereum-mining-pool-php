@@ -238,7 +238,7 @@ while(1) {
           $existQuery = "SELECT blockid, blockPowHash, Digest, nonceFound, minerdiff FROM shares";
           $existResultMinersss = mysqli_query($mysqli,$existQuery) or die("Database Error");
           $gownos = 0;
-          while ($row=mysqli_fetch_row($existResultMinersss)){
+          while ($row=mysqli_fetch_row($existResultMinersss)) {
             $itemTest = array("block" => $row[0], "pow" => str_replace('0x', '', $row[1]), "digest" => str_replace('0x', '', $row[2]), "nonce" => str_replace('0x', '', $row[3]), "diff" => $row[4]);
             array_push($dataitems, $itemTest);
             $gownos++;

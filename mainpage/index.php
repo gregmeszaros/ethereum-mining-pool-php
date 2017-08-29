@@ -345,7 +345,7 @@ else if($method == 'eth_submitHashrate') {
   echo $data_string_redit;
 
 } else if($method == 'eth_submitWork') {
-  $current .= "\n\Work:".$jsonquery;
+  $current .= "\n\Work:" . $jsonquery;
   $ch = curl_init('http://127.0.0.1:8983');
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
   curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonquery);
@@ -364,7 +364,7 @@ else if($method == 'eth_submitHashrate') {
   if($payout_addr != '') {
     $mysqli=mysqli_connect($config['host'], $config['username'], $config['password'], $config['bdd']) or die("Database Error");
     $existQuery = "SELECT address, hashrate FROM miners WHERE address='$payout_addr'";
-    $existResult = mysqli_query($mysqli,$existQuery)or die("Database Error");
+    $existResult = mysqli_query($mysqli,$existQuery) or die("Database Error");
     $existRow = mysqli_fetch_array($existResult);
     $mineraddr = $existRow[0];
     $hashrate = $existRow[1];
@@ -427,7 +427,7 @@ else if($method == 'eth_submitHashrate') {
       }
 
       $existQuery = "SELECT address FROM shares WHERE nonceFound='$jsonparm[0]'";
-      $existResult = mysqli_query($mysqli,$existQuery)or die("Database Error");
+      $existResult = mysqli_query($mysqli, $existQuery) or die("Database Error");
       $existRow = mysqli_fetch_array($existResult);
       $addrchecker = $existRow[0];
       if (!$addrchecker) {
@@ -499,7 +499,7 @@ else if($method == 'eth_getWork') {
   //Miner Get Work   Memcached -> run process_work
   //$result = $m->get('eth_getWork_response');
 
-  $current .= "\n\nRespons1:" . $result;
+  $current .= "\n\nResponse 1:" . $result;
   $TargetBlock = json_decode($result, TRUE);
   $targetBlockResult = $TargetBlock['result'];
   $diffTarget = $targetBlockResult[2];
@@ -563,7 +563,7 @@ else if($method == 'eth_getWork') {
   $data_string_redit = json_encode($data_redit);
 
   $current .= "\nTarget:" . $target_diff;
-  $current .= "\n\nRespons2:" . $data_string_redit;
+  $current .= "\n\nResponse 2:" . $data_string_redit;
 
   echo $data_string_redit;
 }

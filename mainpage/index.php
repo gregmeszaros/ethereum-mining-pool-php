@@ -433,7 +433,7 @@ else if($method == 'eth_submitHashrate') {
       $addrchecker = $existRow[0];
       if (!$addrchecker) {
         $timeNow = time();
-        $tas22k = 'INSERT INTO shares (blockid, address, minertarget, minerdiff, blockdiff, blockPowHash, realBlockTarget, nonceFound, FoundPowHash, Digest, seedhash, time) VALUES ("'.$dataForApp[6].'", "'.$dataForApp[0].'", "'.$dataForApp[1].'", "'.$dataForApp[2].'", "'.$dataForApp[3].'", "'.$dataForApp[4].'", "'.$dataForApp[5].'", "'.$jsonparm[0].'", "'.$jsonparm[1].'", "'.$jsonparm[2].'", "'.$dataForApp[7].'", "'.$timeNow.'")';
+        $tas22k = 'INSERT INTO shares (blockid, address, minertarget, minerdiff, blockdiff, blockPowHash, realBlockTarget, nonceFound, FoundPowHash, Digest, seedhash, time) VALUES ("'.$dataForApp[6].'", "'.$dataForApp[0].'", "'.$dataForApp[1].'", "'.$dataForApp[2]['value'].'", "'.$dataForApp[3]['value'].'", "'.$dataForApp[4].'", "'.$dataForApp[5].'", "'.$jsonparm[0].'", "'.$jsonparm[1].'", "'.$jsonparm[2].'", "'.$dataForApp[7].'", "'.$timeNow.'")';
         $query = mysqli_query($mysqli, $tas22k) or die("Database Error");
       } else {
         die('Dead');

@@ -278,7 +278,7 @@ else if($method == 'eth_submitHashrate') {
   $cur_time = time();
   $hashdata = array($payout_addr, $hash_rate, $hashrateReported, $cur_time);
 
-  $currentMemArr = $redis->get('R_Hash:' . $payout_addr);
+  $currentMemArr = json_decode($redis->get('R_Hash:' . $payout_addr));
   $countFetchedArray = count($currentMemArr);
 
   $miner_total = array();
@@ -382,7 +382,7 @@ else if($method == 'eth_submitHashrate') {
 
   //ADJUST DIFF
   $shareCheckerKey = 'submiting_' . $payout_addr . '_' . $hash_rate;
-  $CheckShareData = $redis->get($shareCheckerKey);
+  $CheckShareData = json_decode($redis->get($shareCheckerKey));
   $CheckShareData = $CheckShareData + 1;
   $redis->set($shareCheckerKey, json_encode($CheckShareData), 30);
   //////////////////////////////////
@@ -391,7 +391,7 @@ else if($method == 'eth_submitHashrate') {
     $jsonparm = $json['params'];
     $appKey = md5($hash_rate . $payout_addr);
     $current .= "\nAPPKEY:" . $appKey;
-    $dataForApp = $redis->get($appKey);
+    $dataForApp = json_decode($redis->get($appKey));
     if ($dataForApp[4] == $jsonparm[1]) {
       $current .= "\n==========================================================================";
       $current .= "\n=======================WORK HAS BEEN SUMBITED=============================";
@@ -412,7 +412,7 @@ else if($method == 'eth_submitHashrate') {
 
 
       $shareKey = 'share_ok';
-      $shareData = $redis->get($shareKey);
+      $shareData = json_decode($redis->get($shareKey));
       if ($shareData > $shareCounter) {
         //$m->set($shareKey,0,360);
         //$m->set('share_fail',0,360);
@@ -423,7 +423,7 @@ else if($method == 'eth_submitHashrate') {
         $reds->mSet(json_encode($items));
       } else {
         $shareData = $shareData + 1;
-        $redis->set($shareKey, json_encode($shareData),360);
+        $redis->set($shareKey, json_encode($shareData), 360);
       }
 
       $existQuery = "SELECT address FROM shares WHERE nonceFound='$jsonparm[0]'";
@@ -446,7 +446,7 @@ else if($method == 'eth_submitHashrate') {
     $current .= "\n===========WORK HAS NOT BEEN SUMBITED DUE EXPIRED SOLUTION=============";
 
     $shareKey = 'share_fail';
-    $shareData = $redis->get($shareKey);
+    $shareData = json_decode($redis->get($shareKey));
     if ($shareData > $shareCounter) {
       //$m->set($shareKey,0,360);
       //$m->set('share_ok',0,360);

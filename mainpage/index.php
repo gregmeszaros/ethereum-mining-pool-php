@@ -420,7 +420,7 @@ else if($method == 'eth_submitHashrate') {
           'share_ok' => 0,
           'share_fail' => 0
         );
-        $reds->mSet(json_encode($items));
+        $reds->mSet($items);
       } else {
         $shareData = $shareData + 1;
         $redis->set($shareKey, json_encode($shareData), 360);
@@ -454,7 +454,7 @@ else if($method == 'eth_submitHashrate') {
         'share_ok' => 0,
         'share_fail' => 0
       );
-      $redis->mSet(json_encode($items));
+      $redis->mSet($items);
     } else {
       $shareData = $shareData + 1;
       $redis->set($shareKey, json_encode($shareData), 360);
@@ -554,11 +554,11 @@ else if($method == 'eth_getWork') {
   $miner_reference = $hash_rate . $payout_addr;
 
   $items = array(
-    $appKey => $dataWrite,
-    $payout_addr => $dataWrite,
+    $appKey => json_encode($dataWrite),
+    $payout_addr => json_encode($dataWrite),
     $miner_reference => $rig_name
   );
-  $redis->mSet(json_encode($items));
+  $redis->mSet($items);
 
   //Overwrite rpc method
   $data_redit = array("id" => 1, "jsonrpc" => "2.0", "result" => [$targetBlockResult[0], $targetBlockResult[1], $target_diff]);

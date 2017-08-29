@@ -336,6 +336,7 @@ else if($method == 'eth_submitHashrate') {
       'Content-Length: ' . strlen($jsonquery))
   );
   $result = curl_exec($ch);
+  // might need to comment out
   $current .= "\n\nResponse hashrate:" . $result;
   //echo $result;
   //*/
@@ -479,8 +480,6 @@ else if($method == 'eth_getWork') {
     $got = $redis->mGet($keys);
   }
 
-  $current .= "\n\nTEST TEST:" . print_r($got, TRUE);
-
   $result1 = $got["blockinfo"];
   $result = $got["eth_getWork_response"];
   $key_Key = $shareCheckerKey;
@@ -488,6 +487,9 @@ else if($method == 'eth_getWork') {
 
   //$result1 = $m->get('blockinfo');
   $block_info_last = json_decode($result1, true);
+
+  $current .= "\n\nTEST NEW:" . print_r($block_info_last, TRUE);
+
   $last_block_result = $block_info_last['result'];
   $last_block_diff = $last_block_result['difficulty'];
   $last_block_timestamp = new Math_BigInteger(hexdec($last_block_result['timestamp']));
@@ -496,13 +498,13 @@ else if($method == 'eth_getWork') {
   $lastBlockTimeHex = $lastBlockTime_BI->toHex();
   $lastBlockTime = hexdec($lastBlockTimeHex);
   $block_number = $last_block_result['number'];
-  $current .= "\n\nLAST BLOCK Diff:".$last_block_diff.' / '.hexdec($last_block_diff);
-  $current .= "\nLAST BLOCK Time:".$last_block_timestamp;
-  $current .= "\nLAST BLOCK Time:".$lastBlockTime.'s';
+  $current .= "\n\nLAST BLOCK Diff:" . $last_block_diff . ' / ' . hexdec($last_block_diff);
+  $current .= "\nLAST BLOCK Time:" . $last_block_timestamp;
+  $current .= "\nLAST BLOCK Time:" . $lastBlockTime.'s';
   //Miner Get Work   Memcached -> run process_work
   //$result = $m->get('eth_getWork_response');
 
-  $current .= "\n\nRespons1:".$result;
+  $current .= "\n\nRespons1:" . $result;
   $TargetBlock = json_decode($result, true);
   $targetBlockResult = $TargetBlock['result'];
   $diffTarget = $targetBlockResult[2];
@@ -541,18 +543,18 @@ else if($method == 'eth_getWork') {
     for ($i=0; $i < $toadd; $i++) {
       $fix .= '0';
     }
-    $target_diff = '0x'.$fix.$target_diff;
+    $target_diff = '0x' . $fix . $target_diff;
   }
 
   //Save Getwork for user to validate later with submit work
-  $appKey = md5($hash_rate.$payout_addr);
-  $current .= "\nAPPKEY:".$appKey;
-  $block_number = hexdec($block_number)+1;
-  $dataWrite =  array($payout_addr,$target_diff,$fixed_diff,$last_block_diff,$targetBlockResult[0],$targetBlockResult[2],$block_number,$targetBlockResult[1]);
+  $appKey = md5($hash_rate . $payout_addr);
+  $current .= "\nAPPKEY:" . $appKey;
+  $block_number = hexdec($block_number) + 1;
+  $dataWrite =  array($payout_addr, $target_diff, $fixed_diff, $last_block_diff, $targetBlockResult[0], $targetBlockResult[2], $block_number, $targetBlockResult[1]);
   //$m->set($appKey,$dataWrite,120);
   //$m->set($payout_addr,$dataWrite,40);
 
-  $miner_reference = $hash_rate.$payout_addr;
+  $miner_reference = $hash_rate . $payout_addr;
 
   $items = array(
     $appKey => $dataWrite,
@@ -565,8 +567,8 @@ else if($method == 'eth_getWork') {
   $data_redit = array("id" => 1, "jsonrpc" => "2.0", "result" => [$targetBlockResult[0], $targetBlockResult[1], $target_diff]);
   $data_string_redit = json_encode($data_redit);
 
-  $current .= "\nTarget:".$target_diff;
-  $current .= "\n\nRespons2:".$data_string_redit;
+  $current .= "\nTarget:" . $target_diff;
+  $current .= "\n\nRespons2:" . $data_string_redit;
 
   echo $data_string_redit;
 }

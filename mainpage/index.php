@@ -316,15 +316,15 @@ else if($method == 'eth_submitHashrate') {
       }
       $new = array();
       array_push($new, $hashdata);
-      $redis->set('R_Hash:' . $payout_addr, $new, 360);
+      $redis->set('R_Hash:' . $payout_addr, json_encode($new), 360);
     } else {
       array_push($currentMemArr, $hashdata);
-      $redis->set('R_Hash:' . $payout_addr, $currentMemArr, 360);
+      $redis->set('R_Hash:' . $payout_addr, json_encode($currentMemArr), 360);
     }
   } else {
     $new = array();
     array_push($new, $hashdata);
-    $redis->set('R_Hash:' . $payout_addr, $new, 360);
+    $redis->set('R_Hash:' . $payout_addr, json_encode($new), 360);
   }
   //DO NOT USE GETH TO HANDLE HASHRATE
   $ch = curl_init('http://127.0.0.1:8983');
@@ -384,7 +384,7 @@ else if($method == 'eth_submitHashrate') {
   $shareCheckerKey = 'submiting_' . $payout_addr . '_' . $hash_rate;
   $CheckShareData = $redis->get($shareCheckerKey);
   $CheckShareData = $CheckShareData + 1;
-  $redis->set($shareCheckerKey, $CheckShareData, 30);
+  $redis->set($shareCheckerKey, json_encode($CheckShareData), 30);
   //////////////////////////////////
   //Override response from geth due it's changes, always pass work for futher processing
   if (1 == 1) {
@@ -420,10 +420,10 @@ else if($method == 'eth_submitHashrate') {
           'share_ok' => 0,
           'share_fail' => 0
         );
-        $reds->mSet($items, time() + 360);
+        $reds->mSet(json_encode($items));
       } else {
         $shareData = $shareData + 1;
-        $redis->set($shareKey,$shareData,360);
+        $redis->set($shareKey, json_encode($shareData),360);
       }
 
       $existQuery = "SELECT address FROM shares WHERE nonceFound='$jsonparm[0]'";
@@ -440,7 +440,7 @@ else if($method == 'eth_submitHashrate') {
     } else {
       $current .= "\n===========WORK HAS NOT BEEN SUMBITED DUE POW HASH DIFFERENCE=============";
       $current .= "\nSubmitPow:" . $jsonparm[1];
-      $current .= "\nGetWorPow:" . $dataForApp[4];
+      $current .= "\nGetWorPow:" . $dataForApp;
     }
   } else {
     $current .= "\n===========WORK HAS NOT BEEN SUMBITED DUE EXPIRED SOLUTION=============";
@@ -454,10 +454,10 @@ else if($method == 'eth_submitHashrate') {
         'share_ok' => 0,
         'share_fail' => 0
       );
-      $redis->mSet($items, time() + 360);
+      $redis->mSet(json_encode($items));
     } else {
       $shareData = $shareData + 1;
-      $redis->set($shareKey,$shareData,360);
+      $redis->set($shareKey, json_encode($shareData), 360);
     }
 
 
@@ -558,7 +558,7 @@ else if($method == 'eth_getWork') {
     $payout_addr => $dataWrite,
     $miner_reference => $rig_name
   );
-  $redis->mSet($items);
+  $redis->mSet(json_encode($items));
 
   //Overwrite rpc method
   $data_redit = array("id" => 1, "jsonrpc" => "2.0", "result" => [$targetBlockResult[0], $targetBlockResult[1], $target_diff]);

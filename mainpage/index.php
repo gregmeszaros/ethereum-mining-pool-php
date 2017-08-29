@@ -2,7 +2,7 @@
 error_reporting(error_reporting() & ~E_NOTICE);
 include_once('../BigInteger.php');
 $jsonquery = file_get_contents('php://input');
-$json = json_decode($jsonquery, true);
+$json = json_decode($jsonquery, TRUE);
 $config = include('../config.php');
 $redis = include_once('../RedisInit.php');
 
@@ -278,7 +278,7 @@ else if($method == 'eth_submitHashrate') {
   $cur_time = time();
   $hashdata = array($payout_addr, $hash_rate, $hashrateReported, $cur_time);
 
-  $currentMemArr = json_decode($redis->get('R_Hash:' . $payout_addr));
+  $currentMemArr = json_decode($redis->get('R_Hash:' . $payout_addr), TRUE);
   $countFetchedArray = count($currentMemArr);
 
   $miner_total = array();
@@ -356,7 +356,7 @@ else if($method == 'eth_submitHashrate') {
   );
   $result = curl_exec($ch);
   $current .= "\n\nResponse:" . $result;
-  $submitWork = json_decode($result, true);
+  $submitWork = json_decode($result, TRUE);
   $submitWorkResult = $submitWork['result'];
   echo '{"jsonrpc":"2.0","id":1,"result":true}'; //Override response from geth to consider share submitted.
 
@@ -382,7 +382,7 @@ else if($method == 'eth_submitHashrate') {
 
   //ADJUST DIFF
   $shareCheckerKey = 'submiting_' . $payout_addr . '_' . $hash_rate;
-  $CheckShareData = json_decode($redis->get($shareCheckerKey));
+  $CheckShareData = json_decode($redis->get($shareCheckerKey), TRUE);
   $CheckShareData = $CheckShareData + 1;
   $redis->set($shareCheckerKey, json_encode($CheckShareData), 30);
   //////////////////////////////////
@@ -391,7 +391,7 @@ else if($method == 'eth_submitHashrate') {
     $jsonparm = $json['params'];
     $appKey = md5($hash_rate . $payout_addr);
     $current .= "\nAPPKEY:" . $appKey;
-    $dataForApp = json_decode($redis->get($appKey));
+    $dataForApp = json_decode($redis->get($appKey), TRUE);
     if ($dataForApp[4] == $jsonparm[1]) {
       $current .= "\n==========================================================================";
       $current .= "\n=======================WORK HAS BEEN SUMBITED=============================";
@@ -412,7 +412,7 @@ else if($method == 'eth_submitHashrate') {
 
 
       $shareKey = 'share_ok';
-      $shareData = json_decode($redis->get($shareKey));
+      $shareData = json_decode($redis->get($shareKey), TRUE);
       if ($shareData > $shareCounter) {
         //$m->set($shareKey,0,360);
         //$m->set('share_fail',0,360);
@@ -446,7 +446,7 @@ else if($method == 'eth_submitHashrate') {
     $current .= "\n===========WORK HAS NOT BEEN SUMBITED DUE EXPIRED SOLUTION=============";
 
     $shareKey = 'share_fail';
-    $shareData = json_decode($redis->get($shareKey));
+    $shareData = json_decode($redis->get($shareKey), TRUE);
     if ($shareData > $shareCounter) {
       //$m->set($shareKey,0,360);
       //$m->set('share_ok',0,360);
@@ -483,9 +483,7 @@ else if($method == 'eth_getWork') {
   $CheckShareData = $got[$key_Key];
 
   //$result1 = $m->get('blockinfo');
-  $block_info_last = json_decode($result1, true);
-
-  $current .= "\n\nTEST NEW:" . print_r($block_info_last, TRUE);
+  $block_info_last = json_decode($result1, TRUE);
 
   $last_block_result = $block_info_last['result'];
   $last_block_diff = $last_block_result['difficulty'];
@@ -502,7 +500,7 @@ else if($method == 'eth_getWork') {
   //$result = $m->get('eth_getWork_response');
 
   $current .= "\n\nRespons1:" . $result;
-  $TargetBlock = json_decode($result, true);
+  $TargetBlock = json_decode($result, TRUE);
   $targetBlockResult = $TargetBlock['result'];
   $diffTarget = $targetBlockResult[2];
   $last_block_diff = new Math_BigInteger(hexdec($last_block_diff));

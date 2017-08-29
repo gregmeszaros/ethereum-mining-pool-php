@@ -465,14 +465,12 @@ else if($method == 'eth_submitHashrate') {
   }
 }
 else if($method == 'eth_getWork') {
-  $null = null;
   $shareCheckerKey = 'submiting_' . $payout_addr . '_' . $hash_rate;
-  $data_multi = array(
-    'blockinfo' => 'blockinfo',
-    'eth_getWork_response' => 'eth_getWork_response',
-    $shareCheckerKey => $shareCheckerKey
+  $keys = array(
+    'blockinfo',
+    'eth_getWork_response',
+    $shareCheckerKey
   );
-  $keys = array_keys($data_multi);
 
   $got = $redis->mGet($keys);
   while (!$got) {
@@ -480,8 +478,8 @@ else if($method == 'eth_getWork') {
     $got = $redis->mGet($keys);
   }
 
-  $result1 = $got["blockinfo"];
-  $result = $got["eth_getWork_response"];
+  $result1 = $got[0];
+  $result = $got[1];
   $key_Key = $shareCheckerKey;
   $CheckShareData = $got[$key_Key];
 

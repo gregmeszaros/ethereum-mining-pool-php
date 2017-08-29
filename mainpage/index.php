@@ -410,6 +410,7 @@ else if($method == 'eth_submitHashrate') {
       $current .= "\n==========================================================================";
       $current .= "\n==========================================================================";
 
+      file_put_contents($file, $current);
 
       $shareKey = 'share_ok';
       $shareData = json_decode($redis->get($shareKey), TRUE);

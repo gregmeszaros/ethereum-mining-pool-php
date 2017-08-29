@@ -397,8 +397,8 @@ else if($method == 'eth_submitHashrate') {
       $current .= "\n=======================WORK HAS BEEN SUMBITED=============================";
       $current .= "\nUser:".$dataForApp[0];
       $current .= "\nUserDiff:".$dataForApp[1];
-      $current .= "\nDiffDecimal:".$dataForApp[2];
-      $current .= "\nBlockDiff:" . print_r($dataForApp, TRUE);
+      $current .= "\nDiffDecimal:".$dataForApp[2]['value'];
+      $current .= "\nBlockDiff:" . $dataForApp[3]['value'];
       $current .= "\nBlockPowHash:".$dataForApp[4];
       $current .= "\nRealBlockTarget:".$dataForApp[5];
       $current .= "\nSeedHash:".$dataForApp[7];

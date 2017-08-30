@@ -67,12 +67,41 @@ if($log) {
 */
 switch ($method) {
   case 'eth_submitHashrate':
-    $output = array("id" => 73, "jsonrpc" => "2.0", "result" => TRUE);
+    $output = [
+      "id" => 73,
+      "jsonrpc" => "2.0",
+      "result" => TRUE
+    ];
     $output = json_encode($output);
     echo $output;
     break;
-  case 1:
-    echo "i equals 1";
+  case 'eth_getWork':
+    $getBlockInfo = 'blockinfo';
+    $getWorkKey = 'eth_getWork_response';
+
+    $data = [
+      "jsonrpc" => "2.0",
+      "method" => "eth_getBlockByNumber",
+      "params" => ["latest", TRUE],
+      "id" => "1"
+    ];
+    $data = json_encode($data);
+
+    $ch_block = curl_init('http://127.0.0.1:8983');
+    curl_setopt($ch_block, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch_block, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch_block, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch_block, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Content-Length: ' . strlen($data))
+    );
+
+    $output = curl_exec($ch_block);
+    if($log) {
+      $current .= "\n eth_getBlockByNumber: " . print_r($output, TRUE);
+      file_put_contents($log_path, $current);
+    }
+
     break;
   case 2:
     echo "i equals 2";

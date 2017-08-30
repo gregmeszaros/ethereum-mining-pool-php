@@ -74,7 +74,7 @@ switch ($method) {
       "params" => $json['params'],
       "id" => 73,
     ];
-    $data = json_encode($output);
+    $data = json_encode($data);
 
     $ch_hashrate = curl_init('http://127.0.0.1:8983');
     curl_setopt($ch_hashrate, CURLOPT_CUSTOMREQUEST, "POST");

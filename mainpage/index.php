@@ -16,7 +16,7 @@ $host = $_SERVER["REMOTE_ADDR"];
 $shareCounter = 5000;
 
 // Pool Diff
-$miner_diff = 15000000;
+$pool_diff = 15000000;
 
 // Log data (true / false)
 $log = true;
@@ -142,10 +142,41 @@ switch ($method) {
 
     // eth_getWork
     $output = curl_exec($ch_get_work);
-    echo $output;
+
+    // Get the miners last submitted hashrate (REDIS)
+    $miner_diff = 10000000;
+    $fixed_diff = floatval($miner_diff);
+
+    // Change the difficulty based on pool difficulty and miner hashrate
+    $fixed_diff = $fixed_diff * $pool_diff;
+
+    $a256 = new Math_BigInteger('115792089237316195423570985008687907853269984665640564039457584007913129639936');  //2^256
+
+    // Convert diff decimal to hex 256bit
+    $fixed_diff = new Math_BigInteger($fixed_diff);
+    list($quotient, $remainder) = $a256->divide($fixed_diff);
+    $target_diff = $quotient->toString();
+    $target_diff = bcdechex($target_diff);
+
+    $currentLength = strlen($target_diff);
+    $desiredLength = 64;
+    if ($currentLength < $desiredLength) {
+      $toadd = $desiredLength - $currentLength;
+      for ($i = 0; $i < $toadd; $i++) {
+        $fix .= '0';
+      }
+      $target_diff = '0x' . $fix . $target_diff;
+    }
+
+    $output = json_decode($output);
+    $output[2] = $target_diff;
+
+    echo json_encode($output);
 
     if($log) {
       $current .= "\n eth_getWork: " . print_r($output, TRUE);
+      $current .= "\n eth_getWork : fixed diff" . print_r($fixed_diff, TRUE);
+      $current .= "\n eth_getWork : target diff" . print_r($target_diff, TRUE);
       file_put_contents($log_path, $current);
     }
 

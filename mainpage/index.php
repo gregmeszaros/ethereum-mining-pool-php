@@ -209,7 +209,7 @@ switch ($method) {
  * @param int $miner_hashrate
  * @return String
  */
-function getTargetDiff($pool_diff = 15000000, $miner_hashrate = 15000000) {
+function getTargetDiff($pool_diff = 15000000, $miner_hashrate = 8000000) {
   $a256 = new Math_BigInteger('115792089237316195423570985008687907853269984665640564039457584007913129639936');  //2^256
   $pool_diff = new Math_BigInteger($pool_diff * $miner_hashrate);
 

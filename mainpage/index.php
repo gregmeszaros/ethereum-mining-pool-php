@@ -147,7 +147,7 @@ switch ($method) {
     $output = curl_exec($ch_get_work);
 
     $output = json_decode($output, TRUE);
-    $getWorkPow = $output['result'][0];
+    $redis->set('getWorkPow', $output['result'][0]);
     $output['result'][2] = getTargetDiff();
 
     echo json_encode($output);

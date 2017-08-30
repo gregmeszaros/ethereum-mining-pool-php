@@ -164,10 +164,14 @@ switch ($method) {
 
     $output['result'][2] = $target_diff;
 
-    echo json_encode($output);
+    // Overwrite rpc method
+    $overwrite_output = array("id" => 1, "jsonrpc" => "2.0", "result" => [$output['result'][0], $output['result'][1], $target_diff]);
+
+    echo json_encode($overwrite_output);
 
     if($log) {
       $current .= "\n eth_getWork: " . print_r($output, TRUE);
+      $current .= "\n eth_getWork - overwrite " . print_r($overwrite_output, TRUE);
       $current .= "\n eth_getWork - target diff " . print_r($target_diff, TRUE);
       file_put_contents($log_path, $current);
     }
@@ -192,7 +196,7 @@ switch ($method) {
       "jsonrpc" => "2.0",
       "method" => "eth_submitWork",
       "params" => $json['params'],
-      "id" => 73
+      "id" => 1
     ];
     $data = json_encode($data);
 

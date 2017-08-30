@@ -35,7 +35,7 @@ $log = true;
 
 if($log) {
   $filename = 'miner-log.txt';
-  $log_path = 'logs' . $filename;
+  $log_path = 'logs/' . $filename;
 
   if(!file_exists($log_path)) {
     $fh = fopen($log_path, 'w');

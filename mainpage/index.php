@@ -147,6 +147,7 @@ switch ($method) {
     $output = curl_exec($ch_get_work);
 
     $output = json_decode($output, TRUE);
+    $getWorkPow = $output['result'][0];
     $output['result'][2] = getTargetDiff();
 
     echo json_encode($output);
@@ -159,6 +160,19 @@ switch ($method) {
 
     break;
   case 'eth_submitWork':
+
+    if($log) {
+      $current .= "\n eth_submitWork before: " . print_r($json['params'], TRUE);
+      file_put_contents($log_path, $current);
+    }
+
+    // Set correct Pow hash
+    $json['params'][1] = $getWorkPow;
+
+    if($log) {
+      $current .= "\n eth_submitWork after: " . print_r($json['params'], TRUE);
+      file_put_contents($log_path, $current);
+    }
 
     $data = [
       "jsonrpc" => "2.0",

@@ -144,7 +144,7 @@ switch ($method) {
     $output = curl_exec($ch_get_work);
 
     $output = json_decode($output, TRUE);
-    $output[2] = getTargetDiff();
+    $output['result'][2] = getTargetDiff();
 
     echo json_encode($output);
 

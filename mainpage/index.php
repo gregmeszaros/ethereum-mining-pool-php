@@ -57,4 +57,26 @@ if($log) {
   file_put_contents($log_path, $current);
 }
 
+/**
+  MINER METHODS
+  eth_getWork
+  eth_submitWork
+  eth_submitHashrate
+  eth_awaitNewWork
+  eth_progress
+*/
+switch ($method) {
+  case 'eth_submitHashrate':
+    $output = array("id" => 73, "jsonrpc" => "2.0", "result" => TRUE);
+    $output = json_encode($output);
+    echo $output;
+    break;
+  case 1:
+    echo "i equals 1";
+    break;
+  case 2:
+    echo "i equals 2";
+    break;
+}
+
 ?>

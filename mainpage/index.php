@@ -168,7 +168,7 @@ switch ($method) {
       $target_diff = '0x' . $fix . $target_diff;
     }
 
-    $output = json_decode($output);
+    $output = json_decode($output, TRUE);
     $output[2] = $target_diff;
 
     echo json_encode($output);

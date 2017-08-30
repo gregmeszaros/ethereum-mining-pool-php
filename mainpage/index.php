@@ -80,9 +80,10 @@ switch ($method) {
     curl_setopt($ch_hashrate, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch_hashrate, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch_hashrate, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch_hashrate, CURLOPT_HTTPHEADER, array(
-      'Content-Type: application/json',
-      'Content-Length: ' . strlen($data))
+    curl_setopt($ch_hashrate, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data)
+      ]
     );
 
     // eth_submitHashrate
@@ -111,9 +112,10 @@ switch ($method) {
     curl_setopt($ch_block, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch_block, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch_block, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch_block, CURLOPT_HTTPHEADER, array(
-      'Content-Type: application/json',
-      'Content-Length: ' . strlen($data))
+    curl_setopt($ch_block, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data)
+      ]
     );
 
     // Block info
@@ -135,9 +137,10 @@ switch ($method) {
     curl_setopt($ch_get_work, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch_get_work, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch_get_work, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch_get_work, CURLOPT_HTTPHEADER, array(
-      'Content-Type: application/json',
-      'Content-Length: ' . strlen($data))
+    curl_setopt($ch_get_work, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data)
+      ]
     );
 
     // eth_getWork
@@ -157,8 +160,29 @@ switch ($method) {
     break;
   case 'eth_submitWork':
 
+    $data = [
+      "jsonrpc" => "2.0",
+      "method" => "eth_submitWork",
+      "params" => $json['params'],
+      "id" => 73
+    ];
+    $data = json_encode($data);
+
+    $ch_submit_work = curl_init('http://127.0.0.1:8983');
+    curl_setopt($ch_submit_work, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch_submit_work, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch_submit_work, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch_submit_work, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data)
+      ]
+    );
+
+    // eth_submitWork
+    $output = curl_exec($ch_submit_work);
+
     if($log) {
-      $current .= "\n eth_submitWork: test";
+      $current .= "\n eth_submitWork: " . print_r($output, TRUE);
       file_put_contents($log_path, $current);
     }
     break;

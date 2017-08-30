@@ -180,6 +180,7 @@ switch ($method) {
 
     // eth_submitWork
     $output = curl_exec($ch_submit_work);
+    echo json_encode($output);
 
     if($log) {
       $current .= "\n eth_submitWork: " . print_r($output, TRUE);

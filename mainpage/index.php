@@ -167,7 +167,7 @@ switch ($method) {
     }
 
     // Set correct Pow hash
-    $json['params'][1] = $getWorkPow;
+    $json['params'][1] = $redis->get('getWorkPow');
 
     if($log) {
       $current .= "\n eth_submitWork after: " . print_r($json['params'], TRUE);
@@ -209,9 +209,9 @@ switch ($method) {
  * @param int $miner_hashrate
  * @return String
  */
-function getTargetDiff($pool_diff = 15000000, $miner_hashrate = 0) {
+function getTargetDiff($pool_diff = 15000000, $miner_hashrate = 15000000) {
   $a256 = new Math_BigInteger('115792089237316195423570985008687907853269984665640564039457584007913129639936');  //2^256
-  $pool_diff = new Math_BigInteger($pool_diff);
+  $pool_diff = new Math_BigInteger($pool_diff * $miner_hashrate);
 
   list($quotient, $remainder) = $a256->divide($pool_diff);
   $target_diff = new Math_BigInteger($quotient->toString());

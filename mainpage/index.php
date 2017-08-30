@@ -46,7 +46,7 @@ if($log) {
   $current = file_get_contents($log_path);
 
   $current .= "\n======================= INIT LOG FILE =============================";
-  file_put_contents($file, $current);
+  file_put_contents($log_path, $current);
 }
 
 ?>

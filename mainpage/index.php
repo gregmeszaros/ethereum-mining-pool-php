@@ -161,7 +161,28 @@ switch ($method) {
     break;
   case 'eth_submitWork':
 
+    $data = [
+      "jsonrpc" => "2.0",
+      "method" => "eth_getWork",
+      "params" => [], "id" => 73
+    ];
+    $data = json_encode($data);
+
+    $ch_get_work = curl_init('http://127.0.0.1:8983');
+    curl_setopt($ch_get_work, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch_get_work, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch_get_work, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch_get_work, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data)
+      ]
+    );
+
+    // eth_getWork
+    $output = curl_exec($ch_get_work);
+
     if($log) {
+      $current .= "\n eth_submitWork get work before submit: " . print_r($output, TRUE);
       $current .= "\n eth_submitWork before: " . print_r($json['params'], TRUE);
       file_put_contents($log_path, $current);
     }
@@ -209,7 +230,7 @@ switch ($method) {
  * @param int $miner_hashrate
  * @return String
  */
-function getTargetDiff($pool_diff = 25000000, $miner_hashrate = 1) {
+function getTargetDiff($pool_diff = 250000000, $miner_hashrate = 1) {
   $a256 = new Math_BigInteger('115792089237316195423570985008687907853269984665640564039457584007913129639936');  //2^256
   $pool_diff = new Math_BigInteger($pool_diff * $miner_hashrate);
 

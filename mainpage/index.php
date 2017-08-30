@@ -185,7 +185,7 @@ switch ($method) {
     }
 
     // Set correct Pow hash
-    $json['params'][1] = $json['params'][2]
+    $json['params'][1] = $json['params'][2];
     $json['params'][2] = $redis->get('getWorkPow');
 
     if($log) {

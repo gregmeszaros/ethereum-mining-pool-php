@@ -18,18 +18,6 @@ $shareCounter = 5000;
 // Pool Diff
 $miner_diff = 15000000;
 
-// Get data from miner
-if ($minerdata) {
-  $minderdata_array = explode('@', $minerdata);
-  $hash_rate = $minderdata_array[0];
-  $payout_addr = $minderdata_array[1];
-  $rig_name = $minderdata_array[2];
-}
-
-// Get data from input
-$jsonquery = file_get_contents('php://input');
-$json = json_decode($jsonquery, TRUE);
-
 // Log data (true / false)
 $log = true;
 
@@ -46,6 +34,26 @@ if($log) {
   $current = file_get_contents($log_path);
 
   $current .= "\n======================= INIT LOG FILE =============================";
+  file_put_contents($log_path, $current);
+}
+
+// Get data from miner
+if ($minerdata) {
+  $minderdata_array = explode('@', $minerdata);
+  $hash_rate = $minderdata_array[0];
+  $payout_addr = $minderdata_array[1];
+  $rig_name = $minderdata_array[2];
+}
+
+// Get data from input
+$jsonquery = file_get_contents('php://input');
+$json = json_decode($jsonquery, TRUE);
+
+// Get Method
+$method = $json['method'] ?? '';
+
+if($log) {
+  $current .= "\n Method used: $method";
   file_put_contents($log_path, $current);
 }
 

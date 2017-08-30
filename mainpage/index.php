@@ -114,7 +114,7 @@ switch ($method) {
 
     $ch_get_work = curl_init('http://127.0.0.1:8983');
     curl_setopt($ch_get_work, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch_get_work, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch_get_work, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch_get_work, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch_get_work, CURLOPT_HTTPHEADER, array(
       'Content-Type: application/json',

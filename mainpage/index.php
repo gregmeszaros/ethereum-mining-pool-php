@@ -68,13 +68,13 @@ if($log) {
 */
 switch ($method) {
   case 'eth_submitHashrate':
-    $output = [
+    $data = [
       "id" => 73,
       "jsonrpc" => "2.0",
       "result" => TRUE
     ];
-    $output = json_encode($output);
-    echo $output;
+    $data = json_encode($output);
+
     break;
   case 'eth_getWork':
     $getBlockInfo = 'blockinfo';
@@ -123,6 +123,7 @@ switch ($method) {
 
     // eth_getWork
     $output = curl_exec($ch_get_work);
+    echo $output;
 
     if($log) {
       $current .= "\n eth_getWork: " . print_r($output, TRUE);
@@ -130,8 +131,12 @@ switch ($method) {
     }
 
     break;
-  case 2:
-    echo "i equals 2";
+  case 'eth_submitWork':
+
+    if($log) {
+      $current .= "\n eth_submitWork: test";
+      file_put_contents($log_path, $current);
+    }
     break;
 }
 

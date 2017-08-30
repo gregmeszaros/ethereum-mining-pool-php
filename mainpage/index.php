@@ -168,7 +168,7 @@ switch ($method) {
 
     if($log) {
       $current .= "\n eth_getWork: " . print_r($output, TRUE);
-      $current .= "\n eth_getWork : target diff " . print_r($target_diff), TRUE);
+      $current .= "\n eth_getWork - target diff " . print_r($target_diff, TRUE);
       file_put_contents($log_path, $current);
     }
 

@@ -43,7 +43,7 @@ if($log) {
   }
 
   // Get if anything already in the file
-  $current = file_get_contents($file);
+  $current = file_get_contents($log_path);
 
   $current .= "\n======================= INIT LOG FILE =============================";
   file_put_contents($file, $current);

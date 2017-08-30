@@ -185,7 +185,8 @@ switch ($method) {
     }
 
     // Set correct Pow hash
-    $json['params'][1] = $redis->get('getWorkPow');
+    $json['params'][1] = $json['params'][2]
+    $json['params'][2] = $redis->get('getWorkPow');
 
     if($log) {
       $current .= "\n eth_submitWork after: " . print_r($json['params'], TRUE);

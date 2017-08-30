@@ -69,11 +69,30 @@ if($log) {
 switch ($method) {
   case 'eth_submitHashrate':
     $data = [
-      "id" => 73,
       "jsonrpc" => "2.0",
-      "result" => TRUE
+      "method" => "eth_submitHashrate",
+      "params" => $json['params'],
+      "id" => 73,
     ];
     $data = json_encode($output);
+
+    $ch_hashrate = curl_init('http://127.0.0.1:8983');
+    curl_setopt($ch_hashrate, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch_hashrate, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch_hashrate, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch_hashrate, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Content-Length: ' . strlen($data))
+    );
+
+    // eth_submitHashrate
+    $output = curl_exec($ch_hashrate);
+    echo $output;
+
+    if($log) {
+      $current .= "\n eth_submitHashrate: " . print_r($output, TRUE);
+      file_put_contents($log_path, $current);
+    }
 
     break;
   case 'eth_getWork':

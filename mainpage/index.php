@@ -222,6 +222,8 @@ switch ($method) {
     ];
     $data = json_encode($data);
 
+    $current .= "\n eth_submitWork params: " . print_r($data, TRUE);
+
     $ch_submit_work = curl_init('http://127.0.0.1:8983');
     curl_setopt($ch_submit_work, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch_submit_work, CURLOPT_POSTFIELDS, $data);

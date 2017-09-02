@@ -184,9 +184,30 @@ switch ($method) {
       file_put_contents($log_path, $current);
     }
 
-    // Set correct Pow hash
-    $json['params'][1] = $json['params'][2];
-    $json['params'][2] = $redis->get('getWorkPow');
+    $data = [
+      "jsonrpc" => "2.0",
+      "method" => "eth_getWork",
+      "params" => [], "id" => 73
+    ];
+    $data = json_encode($data);
+
+    $ch_get_work = curl_init('http://127.0.0.1:8983');
+    curl_setopt($ch_get_work, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch_get_work, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch_get_work, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch_get_work, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data)
+      ]
+    );
+
+    // eth_getWork
+    $output = curl_exec($ch_get_work);
+    $output = json_decode($output, TRUE);
+
+    // Set correct Pow hash - doing new getWork
+    $json['params'][1] = $output['result'][0];
+    $redis->set('target_pow', $output['result'][0]);
 
     if($log) {
       $current .= "\n eth_submitWork after: " . print_r($json['params'], TRUE);

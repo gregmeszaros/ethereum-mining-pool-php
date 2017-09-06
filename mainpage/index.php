@@ -171,16 +171,20 @@ switch ($method) {
 
     // eth_submitWork
     $output = curl_exec($ch_submit_work);
-
-    // Debug exec info
-    $info = curl_getinfo($ch_submit_work);
-    if($log) {
-      // We should always save this, as 200 should be returned when block/solution is found
-      $current .= "\n eth_submitWork INFO: " . print_r($info, TRUE);
-      file_put_contents($log_path, $current);
-    }
-
     echo $output;
+
+    // Check if output is a solution if yes save it to our found blocks
+    $output_check = json_decode($output, TRUE);
+
+    // If the submission was a solution
+    if ($output_check['result'] !== false) {
+      $key = date("h:i:sa");
+      $solution = $json['params'][0] . '--' . $json['params'][1];
+      $redis->set($key, $solution);
+    }
+    else {
+      $redis->set('no-sol', date("h:i:sa"));
+    }
 
     if($log) {
       $current .= "\n eth_submitWork: " . print_r($output, TRUE);

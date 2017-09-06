@@ -52,12 +52,6 @@ $json = json_decode($jsonquery, TRUE);
 // Get Method
 $method = $json['method'] ?? '';
 
-if($log) {
-  $current .= "\n Method used: $method";
-  $current .= "\n PHP input: " . print_r($json, TRUE);
-  file_put_contents($log_path, $current);
-}
-
 /**
   MINER METHODS
   eth_getWork
@@ -133,6 +127,12 @@ switch ($method) {
       $target_diff = '0x' . $fix . $target_diff;
     }
 
+    if($log) {
+      $current .= "\n eth_getWork - default target diff " . print_r($output['result'][2], TRUE);
+      file_put_contents($log_path, $current);
+    }
+
+    // Set static difficulty
     $output['result'][2] = $target_diff;
 
     // Overwrite rpc method

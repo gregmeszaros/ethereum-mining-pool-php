@@ -15,8 +15,8 @@ $host = $_SERVER["REMOTE_ADDR"];
 // Share stats reset
 $shareCounter = 5000;
 
-// Pool Diff
-$pool_diff = 15000000;
+// Pool Diff ( 400 M as default)
+$pool_diff = 400000000;
 
 // Log data (true / false)
 $log = true;
@@ -97,35 +97,6 @@ switch ($method) {
 
     break;
   case 'eth_getWork':
-    $getBlockInfo = 'blockinfo';
-    $getWorkKey = 'eth_getWork_response';
-
-    $data = [
-      "jsonrpc" => "2.0",
-      "method" => "eth_getBlockByNumber",
-      "params" => ["latest", TRUE],
-      "id" => "1"
-    ];
-    $data = json_encode($data);
-
-    $ch_block = curl_init('http://127.0.0.1:8983');
-    curl_setopt($ch_block, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch_block, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($ch_block, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch_block, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json',
-        'Content-Length: ' . strlen($data)
-      ]
-    );
-
-    // Block info
-    $output = curl_exec($ch_block);
-
-    if($log) {
-      $current .= "\n eth_getBlockByNumber: " . print_r($output, TRUE);
-      file_put_contents($log_path, $current);
-    }
-
     $data = [
       "jsonrpc" => "2.0",
       "method" => "eth_getWork",
@@ -148,7 +119,7 @@ switch ($method) {
 
     $output = json_decode($output, TRUE);
     $redis->set('getWorkPow', $output['result'][0]);
-    $new_diff = getTargetDiff();
+    $new_diff = getTargetDiff($pool_diff);
     $fix = '';
 
     $target_diff = bcdechex($new_diff);
@@ -178,42 +149,6 @@ switch ($method) {
 
     break;
   case 'eth_submitWork':
-
-    if($log) {
-      $current .= "\n eth_submitWork before: " . print_r($json['params'], TRUE);
-      file_put_contents($log_path, $current);
-    }
-
-    $data = [
-      "jsonrpc" => "2.0",
-      "method" => "eth_getWork",
-      "params" => [], "id" => 73
-    ];
-    $data = json_encode($data);
-
-    $ch_get_work = curl_init('http://127.0.0.1:8983');
-    curl_setopt($ch_get_work, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch_get_work, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($ch_get_work, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch_get_work, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json',
-        'Content-Length: ' . strlen($data)
-      ]
-    );
-
-    // eth_getWork
-    $output = curl_exec($ch_get_work);
-    $output = json_decode($output, TRUE);
-
-    // Set correct Pow hash - doing new getWork
-    $json['params'][1] = $output['result'][0];
-    $redis->set('target_pow', $output['result'][0]);
-
-    if($log) {
-      $current .= "\n eth_submitWork after: " . print_r($json['params'], TRUE);
-      file_put_contents($log_path, $current);
-    }
-
     $data = [
       "jsonrpc" => "2.0",
       "method" => "eth_submitWork",
@@ -251,7 +186,7 @@ switch ($method) {
  * @param int $miner_hashrate
  * @return String
  */
-function getTargetDiff($pool_diff = 4000000000, $miner_hashrate = 1) {
+function getTargetDiff($pool_diff = 400000000, $miner_hashrate = 1) {
   $a256 = new Math_BigInteger('115792089237316195423570985008687907853269984665640564039457584007913129639936');  //2^256
   $pool_diff = new Math_BigInteger($pool_diff * $miner_hashrate);
 

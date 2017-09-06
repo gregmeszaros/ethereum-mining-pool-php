@@ -171,6 +171,15 @@ switch ($method) {
 
     // eth_submitWork
     $output = curl_exec($ch_submit_work);
+
+    // Debug exec info
+    $info = curl_getinfo($ch_submit_work);
+    if($log) {
+      // We should always save this, as 200 should be returned when block/solution is found
+      $current .= "\n eth_submitWork INFO: " . print_r($info, TRUE);
+      file_put_contents($log_path, $current);
+    }
+
     echo $output;
 
     if($log) {

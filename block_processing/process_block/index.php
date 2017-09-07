@@ -31,7 +31,7 @@ while(1) {
         $block = json_decode(getBlock($previous_block_hash), TRUE);
         // print_r($block);
         print 'checking nonce: ' . $block['result']['nonce'];
-      } while($nonce == $block['result']['nonce']);
+      } while($nonce != $block['result']['nonce']);
 
       print 'block we looking for: ';
       print_r($block);

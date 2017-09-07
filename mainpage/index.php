@@ -178,9 +178,20 @@ switch ($method) {
 
     // If the submission was a solution
     if ($output_check['result'] !== false) {
-      $key = date("h:i:sa");
+      $key = date("h:i:sa") . '--' . $json['params'][0];
       $solution = $json['params'][0] . '--' . $json['params'][1];
+      $nonces = json_decode($redis->get('nonces_to_check'), TRUE);
+
+      // Add newly found nonce
+      $nonces[] = $json['params'][0];
+
+      // Track time and nonce
       $redis->set($key, $solution);
+
+      // Set found nonces
+      $redis->set('nonces_to_check', json_encode($nonces));
+
+      // @TODO Set who found the solution? miner account
     }
     else {
       $redis->set('no-sol', date("h:i:sa"));

@@ -2,24 +2,23 @@
 
 // Include REDIS
 $redis = include_once('../../RedisInit.php');
-
-$nonces_to_check = json_decode($redis->get('nonces_to_check'), TRUE);
-print_r($nonces_to_check);
 $iteration = 0;
 
 while(1) {
   $iteration++;
 
-  $result = getBlock();
-  print_r($result);
-  $last_block = json_decode($result, TRUE);
-  $last_block_number = hexdec($last_block['result']['number']);
-  print $last_block_number;
+  $nonces_to_check = json_decode($redis->get('nonces_to_check'), TRUE);
+  print_r($nonces_to_check);
   print 'iteration number: ' . $iteration;
 
   if (is_array($nonces_to_check)) {
     foreach ($nonces_to_check as $nonce) {
-      print_r($nonces_to_check);
+      $result = getBlock();
+      print_r($result);
+      $last_block = json_decode($result, TRUE);
+      $last_block_number = hexdec($last_block['result']['number']);
+      print $last_block_number;
+
       print 'nonce to check: ' . $nonce;
       // Set starting position
       $previous_block_number = $last_block_number;
@@ -29,7 +28,7 @@ while(1) {
         print 'previous number: ' . $previous_block_number;
         print 'previous hash: ' . $previous_block_hash;
         $block = json_decode(getBlock($previous_block_hash), TRUE);
-        // print_r($block);
+
         print 'checking nonce: ' . $block['result']['nonce'];
       } while($nonce != $block['result']['nonce']);
 

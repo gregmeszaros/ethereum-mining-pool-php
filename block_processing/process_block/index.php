@@ -22,13 +22,13 @@ while(1) {
       print_r($nonces_to_check);
       print 'nonce to check: ' . $nonce;
       // Set starting position
-      $last_block_number = $previous_block_number;
+      $previous_block_number = $last_block_number;
       do {
         $previous_block_number = $previous_block_number - 1;
         $previous_block_hash = '0x' . dechex($previous_block_number);
         print 'previous number: ' . $previous_block_number;
         print 'previous hash: ' . $previous_block_hash;
-        $block = getBlock($previous_block_hash);
+        $block = json_decode(getBlock($previous_block_hash), TRUE);
         print_r($block);
         print 'checking nonce: ' . $block['result']['nonce'];
       } while($nonce == $block['result']['nonce']);

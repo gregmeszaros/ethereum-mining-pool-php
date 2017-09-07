@@ -14,7 +14,7 @@ while(1) {
   $last_block = json_decode($result, TRUE);
   $last_block_number = hexdec($last_block['result']['number']);
   print $last_block_number;
-  print 'iteration number: ' . $$iteration;
+  print 'iteration number: ' . $iteration;
 
   if (is_array($nonces_to_check)) {
     foreach ($nonces_to_check as $nonce) {

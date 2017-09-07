@@ -4,6 +4,7 @@
 $redis = include_once('../../RedisInit.php');
 
 $nonces_to_check = json_decode($redis->get('nonces_to_check'), TRUE);
+print_r($nonces_to_check);
 $iteration = 0;
 
 while(1) {

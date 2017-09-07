@@ -3,7 +3,7 @@
 // Include REDIS
 $redis = include_once('../../RedisInit.php');
 
-$nonces_to_check = json_decode($redis->get('nonces_to_check'));
+$nonces_to_check = json_decode($redis->get('nonces_to_check'), TRUE);
 $iteration = 0;
 
 while(1) {
@@ -50,7 +50,7 @@ function getBlock($block_number = "latest") {
   $data = [
     "jsonrpc" => "2.0",
     "method" => "eth_getBlockByNumber",
-    "params" => [$block_number, true],
+    "params" => [$block_number, TRUE],
     "id" => "1"
   ];
 
@@ -59,7 +59,7 @@ function getBlock($block_number = "latest") {
   $block_info = curl_init('http://127.0.0.1:8983');
   curl_setopt($block_info, CURLOPT_CUSTOMREQUEST, "POST");
   curl_setopt($block_info, CURLOPT_POSTFIELDS, $data_string);
-  curl_setopt($block_info, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($block_info, CURLOPT_RETURNTRANSFER, TRUE);
   curl_setopt($block_info, CURLOPT_HTTPHEADER, [
       'Content-Type: application/json',
       'Content-Length: ' . strlen($data_string)

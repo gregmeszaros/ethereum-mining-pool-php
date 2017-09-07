@@ -29,12 +29,13 @@ while(1) {
         print 'previous number: ' . $previous_block_number;
         print 'previous hash: ' . $previous_block_hash;
         $block = json_decode(getBlock($previous_block_hash), TRUE);
-        print_r($block);
+        // print_r($block);
         print 'checking nonce: ' . $block['result']['nonce'];
       } while($nonce == $block['result']['nonce']);
 
       print 'block we looking for: ';
       print_r($block);
+      print 'block number with solution found: ' . hexdec($block['result']['number']);
     }
   }
 

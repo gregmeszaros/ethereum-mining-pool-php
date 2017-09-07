@@ -15,8 +15,8 @@ $host = $_SERVER["REMOTE_ADDR"];
 // Share stats reset
 $shareCounter = 5000;
 
-// Pool Diff ( 400 M as default)
-$pool_diff = 400000000;
+// Pool Diff ( 500 M as default)
+$pool_diff = 500000000;
 
 // Log data (true / false)
 $log = true;

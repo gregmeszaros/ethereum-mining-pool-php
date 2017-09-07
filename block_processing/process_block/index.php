@@ -12,10 +12,10 @@ $data = [
 
 $data_string = json_encode($data);
 $block_info = curl_init('http://127.0.0.1:8983');
-curl_setopt($ch1, CURLOPT_CUSTOMREQUEST, "POST");
-curl_setopt($ch1, CURLOPT_POSTFIELDS, $data_string);
-curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch1, CURLOPT_HTTPHEADER, [
+curl_setopt($block_info, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($block_info, CURLOPT_POSTFIELDS, $data_string);
+curl_setopt($block_info, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($block_info, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
     'Content-Length: ' . strlen($data_string)
   ]

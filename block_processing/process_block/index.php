@@ -15,7 +15,7 @@ while(1) {
   print $last_block_number;
   print 'iteration number: ' . $i;
 
-  if (is_array(($nonces_to_check)) {
+  if (is_array($nonces_to_check)) {
     foreach ($nonces_to_check as $nonce) {
       print_r($nonces_to_check);
     }

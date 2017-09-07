@@ -16,9 +16,10 @@ curl_setopt($ch1, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($ch1, CURLOPT_POSTFIELDS, $data_string);
 curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch1, CURLOPT_HTTPHEADER, [
-  'Content-Type: application/json',
-  'Content-Length: ' . strlen($data_string))
-];
+    'Content-Type: application/json',
+    'Content-Length: ' . strlen($data_string)
+  ]
+);
 
 $result = curl_exec($block_info);
 

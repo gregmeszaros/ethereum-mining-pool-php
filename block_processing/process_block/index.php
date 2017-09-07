@@ -10,7 +10,7 @@ while(1) {
   $iteration++;
 
   $result = getBlock();
-  $last_block = json_decode($result);
+  $last_block = json_decode($result, TRUE);
   $last_block_number = hexdec($last_block['number']);
   print $last_block_number;
   print 'iteration number: ' . $i;

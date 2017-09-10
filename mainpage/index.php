@@ -242,7 +242,7 @@ function bcdechex($dec) {
  * Checks if the miner already exists
  * If not creates a new miner
  */
-function _checkMiner($miner_address = FALSE) {
+function _checkMiner($miner_address = FALSE, $redis) {
   if ($miner_address && !$redis->exists($miner_address)) {
     $redis->hmset($miner_address, [
       'time_created' => time(),

@@ -243,8 +243,8 @@ function bcdechex($dec) {
  * If not creates a new miner
  */
 function _checkMiner($miner_address = FALSE) {
-  if ($miner_address) {
-    $redis->exists($miner_address) ?? $redis->hmset($miner_address, [
+  if ($miner_address && !$redis->exists($miner_address)) {
+    $redis->hmset($miner_address, [
       'time_created' => time(),
       'time_date' => date("Y-m-d h:i:sa"),
       'blocks_found' => 0

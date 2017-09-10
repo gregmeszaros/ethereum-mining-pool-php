@@ -181,6 +181,7 @@ switch ($method) {
 
     // If the submission was a solution
     if ($output_check['result'] !== false) {
+
       $key = date("h:i:sa") . '--' . $json['params'][0];
       $solution = $json['params'][0] . '--' . $json['params'][1];
       $nonces = json_decode($redis->get('nonces_to_check'), TRUE);
@@ -194,16 +195,20 @@ switch ($method) {
       // Set found nonces
       $redis->set('nonces_to_check', json_encode($nonces));
 
+      // Increase block counter
+      $redis->hincrby($payout_addr, 'blocks_found', 1);
+
       // @TODO Set who found the solution? miner account
       // @TODO -> add valid share increase round share count for miner
     }
     else {
       $redis->set('no-sol', date("h:i:sa"));
-
-      // @TODO check if the share is valid and if it wasn't submitted multiple times
-      // @TODO increase counter for the miner if all good, otherwise put to invalid shares
-      // @TODO too many invalid shares ban??
     }
+
+    // Increase share counter (@TODO -> check if the share is valid and if it wasn't submitted multiple times)
+    $redis->hincrby($payout_addr, 'shares_valid', 1);
+    // @TODO increase counter for the miner if all good, otherwise put to invalid shares
+    // @TODO too many invalid shares ban??
 
     if($log) {
       $current .= "\n eth_submitWork: " . print_r($output, TRUE);
@@ -247,7 +252,11 @@ function _checkMiner($miner_address = FALSE, $redis) {
     $redis->hmset($miner_address, [
       'time_created' => time(),
       'time_date' => date("Y-m-d h:i:sa"),
-      'blocks_found' => 0
+      'blocks_found' => 0,
+      'shares_valid' => 0,
+      'shares_invalid' => 0,
+      'shares_total_valid' => 0,
+      'shares_total_invalid' => 0
     ]);
   }
 }

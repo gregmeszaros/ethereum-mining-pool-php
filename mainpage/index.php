@@ -176,8 +176,8 @@ switch ($method) {
     // Check if output is a solution if yes save it to our found blocks
     $output_check = json_decode($output, TRUE);
 
-    // @TODO check if the miner is already in our DB, if not create new miner data
-    _checkMiner($payout_addr);
+    // Check if the miner is already in our DB, if not create new miner data
+    _checkMiner($payout_addr, $redis);
 
     // If the submission was a solution
     if ($output_check['result'] !== false) {

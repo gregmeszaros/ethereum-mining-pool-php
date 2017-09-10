@@ -35,6 +35,16 @@ while(1) {
       print 'block we looking for: ';
       print_r($block);
       print 'block number with solution found: ' . hexdec($block['result']['number']);
+
+      // Set some info about the block we found
+      $redis->hmset('block_' . $block['result']['nonce'], [
+        'nonce' => $block['result']['nonce'],
+        'number_hex' => $block['result']['number'],
+        'number_dec' => hexdec($block['result']['number']),
+        'mined_on' => $block['result']['timestamp'],
+        'miner' => 'getwhenNonceSaved'
+      ]);
+
     }
   }
 

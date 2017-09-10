@@ -176,6 +176,9 @@ switch ($method) {
     // Check if output is a solution if yes save it to our found blocks
     $output_check = json_decode($output, TRUE);
 
+    // @TODO check if the miner is already in our DB, if not create new miner data
+    _checkMiner($payout_addr);
+
     // If the submission was a solution
     if ($output_check['result'] !== false) {
       $key = date("h:i:sa") . '--' . $json['params'][0];
@@ -192,9 +195,14 @@ switch ($method) {
       $redis->set('nonces_to_check', json_encode($nonces));
 
       // @TODO Set who found the solution? miner account
+      // @TODO -> add valid share increase round share count for miner
     }
     else {
       $redis->set('no-sol', date("h:i:sa"));
+
+      // @TODO check if the share is valid and if it wasn't submitted multiple times
+      // @TODO increase counter for the miner if all good, otherwise put to invalid shares
+      // @TODO too many invalid shares ban??
     }
 
     if($log) {
@@ -228,6 +236,20 @@ function bcdechex($dec) {
     $dec = bcdiv(bcsub($dec, $last), 16);
   } while($dec > 0);
   return $hex;
+}
+
+/**
+ * Checks if the miner already exists
+ * If not creates a new miner
+ */
+function _checkMiner($miner_address = FALSE) {
+  if ($miner_address) {
+    $redis->exists($miner_address) ?? $redis->hmset($miner_address, [
+      'time_created' => time(),
+      'time_date' => date("Y-m-d h:i:sa"),
+      'blocks_found' => 0
+    ]);
+  }
 }
 
 ?>
